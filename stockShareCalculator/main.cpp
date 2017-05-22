@@ -66,13 +66,13 @@ int main() {
   vector<int> shares(n, 0);
 
   for(int i = 0; i < n; i++) {
-    while((shares[i] + 1) * stockCosts[i] <= budget * stockPercent[i]) {
+    while((shares[i] + 1) * stockCosts[i] <= expectedCosts[i]) {
       shares[i]++;
     }
   }
   
   double curCost;
-  int index;
+  int index = 0;
   
   while(index != -1) {
     index = -1;
@@ -90,10 +90,14 @@ int main() {
       shares[index]++;
   }
   
+  double totalInvestment = 0;
   for(int i = 0; i < n; i++) {
     cout << shares[i] << " ";
+    totalInvestment += shares[i] * stockCosts[i];
   }
 
+  cout << endl << "Budget: " << budget;
+  cout << endl << "Investment: " << totalInvestment << endl;
   
 }
 
