@@ -71,16 +71,17 @@ int main() {
     }
   }
   
-  double curCost;
   int index = 0;
   
   while(index != -1) {
     index = -1;
-    curCost = INT_MAX;
+    double minCost = INT_MAX;
     
     for(int i = 0; i < n; i++) {
       shares[i]++;
-      if(costFunction(budget, expectedCosts, shares, stockCosts) < curCost) {
+      double curCost = costFunction(budget, expectedCosts, shares, stockCosts);
+      if(curCost < minCost) {
+        minCost = curCost;
         index = i;
       }
       shares[i]--;
