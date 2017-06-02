@@ -11,12 +11,12 @@ UPPER_LIMIT = 1000000000000
 # e.g.
 #
 # budget
-# number of stocks
-# percentages
+# current price of stocks
+# percentages of total budget
 #
 # 5000.00
 # 117.23 132.13 41.11 32.11 13.12
-# .25 .20 .20 .20 .25
+# .25 .20 .20 .20 .15
 
 
 def init():
