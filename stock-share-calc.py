@@ -1,44 +1,44 @@
+#!/usr/bin/python
+
 import sys
 import math
+from googlefinance import getQuotes
 
 # 10^12
 UPPER_LIMIT = 1000000000000
 
-
-# given a budget, current cost of each stock, and ideal percentage investment of that stock (compare to total budget)
-# return a vector of number of shares of each stock to buy that is the closest to the ideal percentage
-
-# e.g.
-#
-# budget
-# current price of stocks
-# percentages of total budget
-#
-# 5000.00
-# 117.23 132.13 41.11 32.11 13.12
-# .25 .20 .20 .20 .15
-
+LAST_TRADE_STR = "LastTradePrice"
 
 def init():
-    budget = 0.0
+    print("Please enter your budget in USD.")
+    val = sys.stdin.readline().strip('\n')
+    budget = round(float(val), 2)
+
     stock_cost = []
-    stock_percent = []
+    stock_percentages = []
     expected_cost = []
 
-    line = sys.stdin.readline()
-    for el in line.split():
-        budget = float(el)
+    percent_left = 100
+    while percent_left != 0:
+        print("Please enter the ticker symbol of one of the stocks in this investment.")
+        stock_ticker = sys.stdin.readline().strip('\n')
 
-    line = sys.stdin.readline()
-    for el in line.split():
-        stock_cost.append(float(el))
+        stock_price = getQuotes(stock_ticker)[0][LAST_TRADE_STR]
+        print("The current price of " + stock_ticker + " is: " + stock_price)
+        print("Enter a percentage of the investment to allocate to this stock. Percent left: " + str(percent_left))
 
-    line = sys.stdin.readline()
-    for el in line.split():
-        stock_percent.append(float(el))
-        expected_cost.append(budget * float(el))
+        stock_percent = round(float(sys.stdin.readline()), 2)
+        while stock_percent > percent_left:
+            print("Invalid percentage. Please enter a percentage less than or equal to " + str(percent_left) + " for this stock.")
+            stock_percent = round(float(sys.stdin.readline()), 2)
 
-    return [budget, stock_cost, stock_percent, expected_cost]
+        percent_left = round(percent_left - stock_percent, 2)
+        stock_cost.append(float(stock_price))
+        stock_percentages.append(stock_percent/100)
+        expected_cost.append(budget * stock_percent/100)
+
+    print("---------------------------------------")
+    return [budget, stock_cost, stock_percentages, expected_cost]
 
 
 def cost_function(budget, expected_cost, current_shares, stock_cost):
