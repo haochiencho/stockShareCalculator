@@ -9,3 +9,5 @@ each stock to buy to get as close as possible to the ideal portfolio split.
 Install dependencies using `pip install -r requirements.txt`
 
 Then run `python stock-share-calc.py` and follow the prompts.
+
+Note: The CLI is written in Python 3.
