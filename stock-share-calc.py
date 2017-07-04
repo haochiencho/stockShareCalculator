@@ -30,12 +30,12 @@ class InvestmentInfo:
             stock_ticker = sys.stdin.readline().strip('\n')
 
             stock_price = round(float(getQuotes(stock_ticker)[0][LAST_TRADE_STR]), 2)
-            print("The current price of " + stock_ticker + " is: " + str(stock_price))
-            print("*** Enter a percentage of the investment to allocate to this stock. Percent left: " + str(percent_left) + " ***")
+            print("The current price of " + stock_ticker + " is: $" + str(stock_price))
+            print("*** Enter a percentage of the investment to allocate to this stock. Percent left: " + str(percent_left) + "% ***")
 
             stock_percent = round(float(sys.stdin.readline()), 2)
             while stock_percent > percent_left:
-                print("*** Invalid percentage. Please enter a percentage less than or equal to " + str(percent_left) + " for this stock. ***")
+                print("*** Invalid percentage. Please enter a percentage less than or equal to " + str(percent_left) + "% for this stock. ***")
                 stock_percent = round(float(sys.stdin.readline()), 2)
 
             percent_left = round(percent_left - stock_percent, 2)
@@ -97,7 +97,7 @@ def main():
 
     for i in range(len(shares)):
         stock = investment_info.stocks[i]
-        print(stock.ticker + " --- " + str(shares[i]) + " shares")
+        print(stock.ticker + " --- " + str(shares[i]) + (" share" if shares[i] == 1 else " shares"))
         final_investment += shares[i] * stock.price
 
     print("Budget: $" + str(investment_info.budget))
