@@ -61,12 +61,9 @@ def cost_function(investment_info, current_shares):
 
     return total_cost
 
-
-def main():
-    investment_info = InvestmentInfo()
+def compute_ideal_breakdown(investment_info):
     n = len(investment_info.stocks)
     shares = [0] * n
-
     for i in range(n):
         stock = investment_info.stocks[i]
         while (shares[i] + 1) * stock.price <= stock.expected_investment:
@@ -89,16 +86,23 @@ def main():
         if index != -1:
             shares[index] += 1
 
+    return shares
+
+def main():
+    investment_info = InvestmentInfo()
+    shares = compute_ideal_breakdown(investment_info)
+
     final_investment = 0.0
     print("*** INVESTMENT BREAKDOWN ***")
-    for i in range(n):
+
+    for i in range(len(shares)):
         stock = investment_info.stocks[i]
         print(stock.ticker + " --- " + str(shares[i]) + " shares")
         final_investment += shares[i] * stock.price
 
     print("Budget: $" + str(investment_info.budget))
     print("Investment: $" + str(final_investment))
-
+    print("---------------------------------------")
 
 if __name__ == "__main__":
     main()
