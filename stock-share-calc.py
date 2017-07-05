@@ -9,12 +9,14 @@ UPPER_LIMIT = 1000000000000
 
 LAST_TRADE_STR = "LastTradePrice" # from googlefinance API
 
+
 class Stock:
     def __init__(self, stock_ticker, stock_price, stock_percent, budget):
         self.ticker = stock_ticker
         self.price = stock_price
         self.percent = stock_percent/100
         self.expected_investment = budget * self.percent
+
 
 class InvestmentInfo:
     def __init__(self):
@@ -44,6 +46,26 @@ class InvestmentInfo:
         print("---------------------------------------")
 
 
+class InvestmentPlan:
+    def __init__(self, investment_info, shares):
+        self.n_shares_per_stock = {}
+        for i in range(len(shares)):
+            self.n_shares_per_stock[investment_info.stocks[i]] = shares[i]
+
+    def print_stock_shares(self):
+        for stock in self.n_shares_per_stock:
+            n_share = self.n_shares_per_stock[stock]
+            print(stock.ticker + " --- " + str(n_share) + (" share" if n_share == 1 else " shares"))
+
+    def compute_final_investment(self):
+        final_investment = 0.0
+        for stock in self.n_shares_per_stock:
+            n_share = self.n_shares_per_stock[stock]
+            final_investment += n_share * stock.price
+
+        return final_investment
+
+
 def cost_function(investment_info, current_shares):
     total_cost = 0.0
     n = len(investment_info.stocks)
@@ -60,6 +82,7 @@ def cost_function(investment_info, current_shares):
             total_cost += math.fabs(stock.expected_investment - current_shares[i] * stock.price)
 
     return total_cost
+
 
 def compute_ideal_breakdown(investment_info):
     n = len(investment_info.stocks)
@@ -88,21 +111,21 @@ def compute_ideal_breakdown(investment_info):
 
     return shares
 
+
 def main():
     investment_info = InvestmentInfo()
     shares = compute_ideal_breakdown(investment_info)
 
-    final_investment = 0.0
+    investment_plan = InvestmentPlan(investment_info, shares)
+
     print("*** INVESTMENT BREAKDOWN ***")
 
-    for i in range(len(shares)):
-        stock = investment_info.stocks[i]
-        print(stock.ticker + " --- " + str(shares[i]) + (" share" if shares[i] == 1 else " shares"))
-        final_investment += shares[i] * stock.price
+    investment_plan.print_stock_shares()
 
     print("Budget: $" + str(investment_info.budget))
-    print("Investment: $" + str(final_investment))
+    print("Investment: $" + str(investment_plan.compute_final_investment()))
     print("---------------------------------------")
+
 
 if __name__ == "__main__":
     main()
